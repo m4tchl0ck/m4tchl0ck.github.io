@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<head>
+    <title></title>
+  </head>
+
+  <body>
+    <div class="scrollable-container">
+      <button id="submit" class="build-button">some-button</button>
+    </div>
+    <script src="https://miro.com/app/static/sdk.1.1.js"></script>
+    <script src="wpg.js"></script>
+    <script>
+        document.getElementById('submit').addEventListener('click', async () => {
+            var x = await getSelectedBacklogItem();
+            console.log(x);
+        });
+        
+    </script>
+  </body>
+</html>
