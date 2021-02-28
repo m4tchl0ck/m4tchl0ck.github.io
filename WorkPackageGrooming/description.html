@@ -1,20 +1,74 @@
 <!DOCTYPE html>
+
 <head>
     <title></title>
-  </head>
+</head>
 
-  <body>
+<body>
     <div class="scrollable-container">
-      <button id="submit" class="build-button">some-button</button>
+        <h1 id="title"></h1>
+        <h3 id="estimation"></h3>
+        <div id="description"></div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
     <script src="https://miro.com/app/static/sdk.1.1.js"></script>
     <script src="wpg.js"></script>
     <script>
-        document.getElementById('submit').addEventListener('click', async () => {
-            var x = await getSelectedBacklogItem();
-            console.log(x);
+
+        var template = `
+h3. +purpose & goal*:+<br/>
+<%= boldContext(context) %>
+ 
+h3. +detailed description / content:+<br/>
+<%= description %>
+<%= getList(hints) %>
+<%= getList(scenarios, "h3. +scenarios:+") %>
+<%= getList(niceToHave, "h3. +niceToHave:+") %>
+<%= getList(outOfScope, "h3. +non-content:+")  %>
+<%= getList(dependecies, "h3. +dependencies:+") %>
+<%= getList(acceptedRisks, "h3. +acceptedRisks:+") %>
+<%= getList(problems, "h3. +problems:+") %>
+<%= getList(contactPersons, "h3. +contact persons:+") %>
+<%= getList(acceptanceCriterias, "h3. +acceptance criteria:+") %>
+`
+
+        var title = document.getElementById('title');
+        var estimation = document.getElementById('estimation');
+        var description = document.getElementById('description');
+
+        miro.onReady(async () => {
+            var backlogItem = await getSelectedBacklogItem();
+
+            title.innerText = removeP(backlogItem.title);
+            estimation.innerText = "Estimation " + backlogItem.estimation;
+            description.innerHTML = _.template(template)(backlogItem);
+
+            console.log(backlogItem);
         });
-        
+
+        function removeP(text) {
+            return text.replace("<p>", "").replace("</p>", "")
+        }
+
+        function getList(array, title) {
+            if (array.length == 0) {
+                return "";
+            }
+            var res = "";
+            if (title) {
+                res += "<br/>" +title + "<br/>";
+            }
+            _.each(array, item => res += "* " + removeP(item) + "<br/>");
+
+            res += "<br/>";
+            return res;
+        }
+
+        function boldContext(text) {
+            return text.replace("As a ", "*As a* ").replace("I want ", "*I want* ").replace("So that ", "*So that* ");
+        }
+
     </script>
-  </body>
+</body>
+
 </html>

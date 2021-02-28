@@ -4,7 +4,8 @@ var descriptionColor = "#0ca789";
 var estimationColor = "#12cdd4";
 var dependencyColor = "#be88c7";
 var acceptanceCriteriaColor = "#d5f692";
-var riskColor = "#f16c7f";
+var acceptedRiskColor = "#ea94bb";
+var problemColor = "#f16c7f";
 var outOfScopeColor = "#6cd8fa";
 var niceToHaveColor = "#ffcee0";
 var scenarioColor = "#93d275";
@@ -17,15 +18,16 @@ async function getSelectedBacklogItem() {
         context: "",
         description: "",
         estimation: null,
-        subTasks: [],
         acceptanceCriterias: [],
         dependecies: [],
-        risks: [],
+        hints: [],
         outOfScope: [],
+        acceptedRisks: [],
+        problems: [],
         niceToHave: [],
         scenarios: [],
-        hints: [],
-        contactPersons: []
+        contactPersons: [],
+        subTasks: []
     };
 
     var frame = (await miro.board.selection.get())[0];
@@ -44,8 +46,8 @@ async function getSelectedBacklogItem() {
             result.acceptanceCriterias.push(widget.text);
         } else if (widget.type == "STICKER" && widget.style.stickerBackgroundColor == dependencyColor) {
             result.dependecies.push(widget.text);
-        } else if (widget.type == "STICKER" && widget.style.stickerBackgroundColor == riskColor) {
-            result.risks.push(widget.text);
+        } else if (widget.type == "STICKER" && widget.style.stickerBackgroundColor == problemColor) {
+            result.problems.push(widget.text);
         } else if (widget.type == "STICKER" && widget.style.stickerBackgroundColor == outOfScopeColor) {
             result.outOfScope.push(widget.text);
         } else if (widget.type == "STICKER" && widget.style.stickerBackgroundColor == niceToHaveColor) {
@@ -56,6 +58,8 @@ async function getSelectedBacklogItem() {
             result.hints.push(widget.text);
         } else if (widget.type == "STICKER" && widget.style.stickerBackgroundColor == contactPersonColor) {
             result.contactPersons.push(widget.text);
+        } else if (widget.type == "STICKER" && widget.style.stickerBackgroundColor == acceptedRiskColor) {
+            result.acceptedRisks.push(widget.text);
         }
     }
 
